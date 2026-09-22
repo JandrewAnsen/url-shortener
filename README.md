@@ -33,10 +33,10 @@ Render currently runs Kotlin/JVM services from a Dockerfile. Choose its Docker r
 
 Set the three datasource variables above. The application listens on Render's `PORT` (the container defaults to `10000`), binds to all interfaces, and exposes `/healthz` for an HTTP health check. A Git provider repository is needed before Render can deploy this local project from Git.
 
+## Click counting
+
+Each successful short-link redirect increments its click count. The recent-links list links each slug to that redirect and displays its count. Flyway migration V2 initializes existing links to zero.
+
 ## Deliberately omitted features
 
-Authentication, custom slugs, analytics, caching, queues, and background jobs are outside scope.
-
-## Follow-up experiment
-
-After the first deployment, add a click count for each shortened URL in a second commit. That small schema and code change provides a useful redeploy exercise. Click counting is not implemented here.
+Authentication, custom slugs, detailed analytics, caching, queues, and background jobs are outside scope.

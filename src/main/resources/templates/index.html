@@ -25,9 +25,10 @@
 <h2>Recent links</h2>
 <ul>
     <li th:each="link : ${links}">
-        <strong th:text="${link.slug}"></strong> →
+        <a th:href="@{/{slug}(slug=${link.slug})}" th:text="${link.slug}"></a> →
         <a th:href="${link.targetUrl}" th:text="${link.targetUrl}"></a>
         <small th:text="${link.createdAt}"></small>
+        <small th:text="|Clicks: ${link.clickCount}|"></small>
     </li>
 </ul>
 </body>

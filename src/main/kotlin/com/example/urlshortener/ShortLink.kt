@@ -19,6 +19,9 @@ class ShortLink(
 
     @Column(name = "created_at", nullable = false)
     var createdAt: Instant = Instant.now(),
+
+    @Column(name = "click_count", nullable = false)
+    var clickCount: Long = 0,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

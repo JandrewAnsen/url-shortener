@@ -25,6 +25,9 @@ class UrlShortenerApplicationTests {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Autowired
+    lateinit var repository: ShortLinkRepository
+
     @Test
     fun `http and https targets can be shortened and found`() {
         for (target in listOf("http://example.com/a", "https://example.com/b")) {
@@ -69,6 +72,26 @@ class UrlShortenerApplicationTests {
     fun `unknown slug returns 404`() {
         assertNull(links.findTarget("0000000"))
         mvc.perform(get("/0000000")).andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `successful redirects count clicks without counting page views`() {
+        val link = links.create("https://example.com/count-me")
+
+        mvc.perform(get("/?created=${link.slug}")).andExpect(status().isOk)
+        assertEquals(0, repository.findBySlug(link.slug)?.clickCount)
+
+        repeat(2) {
+            mvc.perform(get("/${link.slug}"))
+                .andExpect(status().isFound)
+                .andExpect(header().string("Location", "https://example.com/count-me"))
+        }
+
+        assertEquals(2, repository.findBySlug(link.slug)?.clickCount)
+        mvc.perform(get("/"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("href=\"/${link.slug}\"")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Clicks: 2")))
     }
 
     @Test

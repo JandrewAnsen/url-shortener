@@ -2,6 +2,7 @@ package com.example.urlshortener
 
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.net.URI
 import java.net.URISyntaxException
 import java.security.SecureRandom
@@ -39,6 +40,13 @@ class ShortLinkService(private val repository: ShortLinkRepository) {
     }
 
     fun findTarget(slug: String): String? = repository.findBySlug(slug)?.targetUrl
+
+    @Transactional
+    fun recordClickAndFindTarget(slug: String): String? {
+        val target = repository.findBySlug(slug)?.targetUrl ?: return null
+        repository.incrementClickCount(slug)
+        return target
+    }
 
     fun recentLinks(): List<ShortLink> = repository.findTop20ByOrderByCreatedAtDescIdDesc()
 }

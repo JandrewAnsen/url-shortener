@@ -49,7 +49,7 @@ class LinkController(private val links: ShortLinkService) {
 
     @GetMapping("/{slug:[a-zA-Z0-9]{7}}")
     fun redirect(@PathVariable slug: String): ResponseEntity<Void> {
-        val target = links.findTarget(slug) ?: return ResponseEntity.notFound().build()
+        val target = links.recordClickAndFindTarget(slug) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.status(HttpStatus.FOUND)
             .header(HttpHeaders.LOCATION, target)
             .build()
