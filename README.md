@@ -37,6 +37,10 @@ Set the three datasource variables above. The application listens on Render's `P
 
 Each successful short-link redirect increments its click count. The recent-links list links each slug to that redirect and displays its count. Flyway migration V2 initializes existing links to zero.
 
+## Deployment visibility
+
+The home page displays the running Git commit. Responses include `X-App-Version`, and non-health requests log the commit, method, path, and status. Render supplies `RENDER_GIT_COMMIT` automatically; local runs display `local`.
+
 ## Deliberately omitted features
 
 Authentication, custom slugs, detailed analytics, caching, queues, and background jobs are outside scope.

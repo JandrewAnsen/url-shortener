@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 @Controller
-class LinkController(private val links: ShortLinkService) {
+class LinkController(private val links: ShortLinkService, private val version: DeploymentVersion) {
     @GetMapping("/")
     fun index(@RequestParam(required = false) created: String?, model: Model): String {
         if (created != null && links.findTarget(created) != null) {
@@ -23,6 +23,7 @@ class LinkController(private val links: ShortLinkService) {
             model.addAttribute("shortUrl", shortUrl)
         }
         model.addAttribute("links", links.recentLinks())
+        model.addAttribute("appVersion", version.short)
         return "index"
     }
 

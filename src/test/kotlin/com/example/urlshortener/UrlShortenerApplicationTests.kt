@@ -16,7 +16,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@SpringBootTest
+@SpringBootTest(properties = ["RENDER_GIT_COMMIT=abc123456789"])
 @AutoConfigureMockMvc
 class UrlShortenerApplicationTests {
     @Autowired
@@ -66,6 +66,17 @@ class UrlShortenerApplicationTests {
         mvc.perform(get("/$slug"))
             .andExpect(status().isFound)
             .andExpect(header().string("Location", "https://example.com/path"))
+    }
+
+    @Test
+    fun `page and responses identify the running commit`() {
+        mvc.perform(get("/"))
+            .andExpect(status().isOk)
+            .andExpect(header().string("X-App-Version", "abc123456789"))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Running build <code>abc1234</code>")))
+
+        mvc.perform(get("/healthz"))
+            .andExpect(header().string("X-App-Version", "abc123456789"))
     }
 
     @Test

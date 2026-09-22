@@ -11,10 +11,12 @@
         button { padding: .5rem 1rem; }
         li { margin: .75rem 0; overflow-wrap: anywhere; }
         .error { color: #a00; }
+        .version { background: #e7f2ff; border-left: 4px solid #2769b1; padding: .75rem 1rem; }
     </style>
 </head>
 <body>
 <h1>URL shortener</h1>
+<p class="version">Running build <code th:text="${appVersion}">local</code> · Click tracking enabled</p>
 <form th:action="@{/links}" method="post">
     <input name="targetUrl" type="url" placeholder="https://example.com" aria-label="Target URL"
            required th:value="${targetUrl}">
